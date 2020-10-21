@@ -4,7 +4,7 @@
 
 
 
-```
+```java
 /**
  * description: 自己写一个简单的 Hello.java，里面需要涉及基本类型，四则运行，if 和 for，
  *              然后自己分析一下对应的字节码，有问题群里讨论。
@@ -33,7 +33,7 @@ IDEA打开视图里的Show Bytecode With Jclasslib插件进行反编译生成的
 
 或者用javap -c xx.class文件反编译
 
-```
+```java
 C:\App\IdeaProjects\Test\out\production\Test\com\company>javap -c Hello.class
 Compiled from "Hello.java"
 public class com.company.Hello {
@@ -91,7 +91,7 @@ public class com.company.Hello {
 
 自定义一个 Classloader，加载一个 Hello.xlass 文件，执行 hello 方法，此文件内容是一个 Hello.class 文件所有字节（x=255-x）处理后的文件。文件群里提供。
 
-```
+```java
 public class HelloClassloader extends ClassLoader{
 
     public static void main(String[] args) throws NoSuchMethodException, InvocationTargetException {
@@ -313,3 +313,41 @@ jcmd pid VM.command_line 启动命令行
 2.老年代使用率才5%，伊甸区使用率40%，配置大小不太合理。
 
 3.年轻代GC次数频繁，年轻代分配的空间偏小了
+
+
+
+## 作业五：
+
+IDEA启动添加虚拟机配置 
+
+-XX:+UseG1GC -XX:MaxGCPauseMillis=50
+
+
+
+查看配置
+
+jcmd pid VM.flags
+
+![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603291672294-d874bad8-a8ec-4751-81f0-b128e0f50120.png?x-oss-process=image%2Fresize%2Cw_1959)
+
+
+
+jcmd pid GC.heap_info
+
+![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603291780923-802cf8aa-df98-4d8c-8f93-4462be110ecd.png?x-oss-process=image%2Fresize%2Cw_1959)
+
+
+
+jstat -gc pid 1000 1000
+
+![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603291836271-fa8f5472-f07c-45f6-882e-445fc68f4517.png?x-oss-process=image%2Fresize%2Cw_1959)
+
+jstat -gcutil pid 1000 1000
+
+![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603291898867-06d331a3-46dc-4eb9-8def-9d0259fee509.png)
+
+
+
+jmap -heap pid
+
+![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603292018995-5ad08dde-50c0-406c-9ae8-1e40d352d133.png)
