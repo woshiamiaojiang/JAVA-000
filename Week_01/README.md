@@ -4,7 +4,7 @@
 
 
 
-```java
+```
 /**
  * description: 自己写一个简单的 Hello.java，里面需要涉及基本类型，四则运行，if 和 for，
  *              然后自己分析一下对应的字节码，有问题群里讨论。
@@ -33,7 +33,7 @@ IDEA打开视图里的Show Bytecode With Jclasslib插件进行反编译生成的
 
 或者用javap -c xx.class文件反编译
 
-```java
+```
 C:\App\IdeaProjects\Test\out\production\Test\com\company>javap -c Hello.class
 Compiled from "Hello.java"
 public class com.company.Hello {
@@ -91,7 +91,7 @@ public class com.company.Hello {
 
 自定义一个 Classloader，加载一个 Hello.xlass 文件，执行 hello 方法，此文件内容是一个 Hello.class 文件所有字节（x=255-x）处理后的文件。文件群里提供。
 
-```java
+```
 public class HelloClassloader extends ClassLoader{
 
     public static void main(String[] args) throws NoSuchMethodException, InvocationTargetException {
@@ -140,7 +140,7 @@ Hello.xclass
 
 
 
-![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603283676655-ecc00eb9-0904-4494-b153-f48e077cc05e.png)
+![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603289126007-4e4c9d78-224a-43a6-af92-ed891a774fe3.png)
 
 Java Performance推荐公式
 
@@ -157,3 +157,159 @@ jstat 查看GC信息
 jstack 查看线程信息
 
 jmap 查看heap或类占用空间
+
+
+
+jps 打印所有java进程pid
+
+![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603287072171-aa53c87b-8019-4b6f-a87a-ba650c549952.png)
+
+通过jps -lmv 打印所有java进程pid详细信息
+
+![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603287014848-f17cdc6f-f3bd-4ea6-810f-7fa77aa17c43.png)
+
+jinfo 打印配置信息，包括命令行参数、系统变量。
+
+![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603287246739-fea1a13a-354f-4f45-accc-a790c1511e8b.png)
+
+
+
+jstat -gc  1000(ms执行次数) 1000(执行次数)
+
+打印GC相关的堆内存信息(单位kb)
+
+![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603287545378-a39e21dd-d7de-463e-819e-0debaffe997b.png)
+
+
+
+S0C、S1C、S0U、S1U：Survivor 0/1区容量（Capacity）和使用量（Used）
+
+EC、EU：伊甸区容量和使用量
+
+OC、OU：老年代容量和使用量
+
+MC、MU：元数据区容量和使用量
+
+YGC、YGT：年轻代GC次数和GC耗时
+
+FGC、FGCT：Full GC次数和Full GC耗时
+
+GCT：GC总耗时
+
+CCSC、CCSU: 压缩class空间容量和使用量
+
+
+
+jstat -gcutil  pid 1000(ms执行次数) 1000(执行次数)
+
+打印GC相关的堆内存信息(单位百分比)
+
+![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603288368340-4535e744-b288-43db-997c-87828e9ac009.png)
+
+
+
+S0 就是0号存活区的百分比使用率。0%很正常，因为S0和S1随时有一个是空的。
+
+S1 就是1号存活区的百分比使用率。
+
+E 就是Eden区，新生代的百分比使用率。
+
+O 就是Old区，老年代。百分比使用率。
+
+M 就是Meta区，元数据区百分比使用率。
+
+CCS 压缩 class空间（ Compressed class space）的百分比使用率。
+
+YGC （Young GC）年轻代GC的次数。49次。
+
+YGCT 年轻代GC消耗的总时间。2.5秒，占总运行时间的万分之一不到，基本上可忽略。
+
+FGC FULL GC的次数，可以看到只发生了6次，问题应该不大。
+
+FGCT FULL GC的总时间，0.8秒，平均每次160ms左右
+
+GCT 所有GC加起来消耗的总时间，即YGCT+FGCT
+
+
+
+jmap -histo pid > a.txt
+
+vim a.txt
+
+-histo 看哪些类占用的空间最多, 直方图
+
+![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603289260074-9f9e3273-9e2a-45d9-8d8a-8595be94bec1.png)
+
+Char数组
+
+Byte数组
+
+Int数组
+
+类数组
+
+
+
+jmap -heap pid 
+
+打印堆内存（内存池）的配置和 使用信息。
+
+![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603289556124-1e8a4447-a3ba-49ac-b210-915efd2e573f.png)
+
+jstack -l pid 
+
+长列表模式. 将线程相关的 locks 信息一起输出， 比如持有的锁，等待的锁。
+
+![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603289956808-569cf330-cbb8-4636-b34c-935a2f15428e.png)
+
+
+
+Jcmd综合了前面的几个命令
+
+
+
+示例
+
+jcmd pid help
+
+jcmd pid VM.version
+
+jcmd pid VM.flags
+
+jcmd pid VM.command_line
+
+jcmd pid VM.system_properties 系统信息
+
+jcmd pid Thread.print 打印线程，效果等同于jstack -l pid 
+
+jcmd pid GC.Class_histogram
+
+jcmd pid GC.heap_info
+
+
+
+jcmd pid VM.version
+
+![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603290133889-decf45cf-c6f4-432e-ba96-88d9670049a5.png)
+
+
+
+jcmd pid VM.flags 设置的参数
+
+![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603290193121-85e73cf9-ea08-44a0-bc13-48950bab3ef5.png)
+
+jcmd pid VM.command_line 启动命令行
+
+![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603290270478-7c2a8130-70be-4cf9-a253-9149c68970b1.png)
+
+
+
+
+
+分析出来的一些问题：
+
+1.平均每次Full GC要160ms，时间有点长
+
+2.老年代使用率才5%，伊甸区使用率40%，配置大小不太合理。
+
+3.年轻代GC次数频繁，年轻代分配的空间偏小了
