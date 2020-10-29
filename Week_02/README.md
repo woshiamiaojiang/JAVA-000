@@ -48,13 +48,13 @@ java -XX:+UseG1GC -Xms512m -Xmx512m -Xloggc:gc.demo.log -XX:+PrintGCDateStamps G
 
 对比：
 
-Serial collector适合单核CPU与小堆，收集时会暂停所有工作线程。
+Serial collector适合单核CPU与小堆，收集时会暂停所有工作线程
 
-Parallel collector适合多核CPU，收集时会暂停所有工作线程。
+Parallel collector适合多核CPU，收集时会暂停所有工作线程
 
-CMS相较于Parallel，需要更多的CPU资源，最短停顿时间，堆小于4G建议使用。
+CMS相较于Parallel，需要更多的CPU资源，最短停顿时间，堆小于4G建议使用
 
-G1适合大堆（>4GB），最短停顿时间。
+G1适合大堆（>4GB），最短停顿时间
 
 
 
@@ -68,5 +68,27 @@ SLA应用 -> 低延迟
 
 
 
+## 作业五：
+
+运行课上的例子，以及 Netty 的例子，分析相关现象。
 
 
+
+## 作业六：
+
+写一段代码，使用 HttpClient 或 OkHttp 访问 [http://localhost:8801 ](http://localhost:8801/)，代码提交到 Github。
+
+```java
+public class OkHttpDemo {
+    public static void main(String[] args) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        try {
+            Request request = new Request.Builder().url("http://localhost:8808/test").build();
+            Response response = client.newCall(request).execute();
+            System.out.println(response.body().string());
+        } finally {
+            client.clone();
+        }
+    }
+}
+```
