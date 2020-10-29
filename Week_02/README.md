@@ -8,7 +8,85 @@
 
 使用压测工具（wrk 或 sb），演练 gateway-server-0.0.1-SNAPSHOT.jar 示例。
 
+并行 512M
 
+java -jar -Xmx512m -Xms512m gateway-server-0.0.1-SNAPSHOT.jar
+
+sb -u http://localhost:8088/api/hello -c 20 -N 60
+
+3828
+
+
+
+换成CMS 512M
+
+java -jar -XX:+UseConcMarkSweepGC -Xmx512m -Xms512m gateway-server-0.0.1-SNAPSHOT.jar
+
+sb -u http://localhost:8088/api/hello -c 20 -N 60
+
+3661
+
+
+
+换成CMS 4G
+
+java -jar -XX:+UseConcMarkSweepGC -Xmx4g -Xms4g gateway-server-0.0.1-SNAPSHOT.jar
+
+sb -u http://localhost:8088/api/hello -c 20 -N 60
+
+3824
+
+
+
+换成 4G 并行GC
+
+java -jar -Xmx4g -Xms4g gateway-server-0.0.1-SNAPSHOT.jar
+
+sb -u http://localhost:8088/api/hello -c 20 -N 60
+
+3578
+
+
+
+串行GC 512M
+
+java -jar -XX:+UseSerialGC -Xmx512m -Xms512m gateway-server-0.0.1-SNAPSHOT.jar
+
+sb -u http://localhost:8088/api/hello -c 20 -N 60
+
+4176
+
+
+
+串行GC 4G
+
+java -jar -XX:+UseSerialGC -Xmx4g -Xms4g gateway-server-0.0.1-SNAPSHOT.jar
+
+sb -u http://localhost:8088/api/hello -c 20 -N 60
+
+3542
+
+
+
+G1 GC 512M
+
+java -jar -XX:+UseG1GC -Xmx512m -Xms512m gateway-server-0.0.1-SNAPSHOT.jar
+
+sb -u http://localhost:8088/api/hello -c 20 -N 60
+
+4139
+
+
+
+G1 GC 4g
+
+java -jar -XX:+UseG1GC -Xmx4g -Xms4g gateway-server-0.0.1-SNAPSHOT.jar
+
+sb -u http://localhost:8088/api/hello -c 20 -N 60
+
+
+
+4051
 
 ## 作业三：
 
@@ -45,6 +123,24 @@ java -XX:+UseConcMarkSweepGC-Xms512m -Xmx512m -Xloggc:gc.demo.log -XX:+PrintGCDe
 java -XX:+UseG1GC -Xms512m -Xmx512m -Xloggc:gc.demo.log -XX:+PrintGCDateStamps GCLogAnalysis
 
 ![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603894300907-e8bebbb5-7557-4dfb-9548-ab88c1785089.png?x-oss-process=image%2Fresize%2Cw_1764)
+
+
+
+压测结论：
+
+结论：
+
+512M中
+
+串行≈G1>串行>CMS
+
+4g中
+
+G1>CMS>并行≈串行
+
+**G1非常优秀。512M与4G中吞吐量发挥都很优秀。**
+
+
 
 对比：
 
