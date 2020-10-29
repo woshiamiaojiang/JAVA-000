@@ -83,7 +83,7 @@ public class OkHttpDemo {
     public static void main(String[] args) throws IOException {
         OkHttpClient client = new OkHttpClient();
         try {
-            Request request = new Request.Builder().url("http://localhost:8808/test").build();
+            Request request = new Request.Builder().url("http://localhost:8801").build();
             Response response = client.newCall(request).execute();
             System.out.println(response.body().string());
         } finally {
