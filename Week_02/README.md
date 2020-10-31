@@ -1,6 +1,36 @@
+学习笔记
+
+https://1drv.ms/u/s!Alzce1aJuLVTgjVNCtHJSn8DIp3q
+
 ## 作业一：
 
 使用 GCLogAnalysis.java 自己演练一遍串行 / 并行 /CMS/G1 的案例。
+
+**串行GC**
+
+java -Xloggc:gc.demo.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps GCLogAnalysis
+
+![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603894228067-96dfe231-3907-4327-bfb5-694c7aaf10a0.png?x-oss-process=image%2Fresize%2Cw_1764)
+
+性能很差，避免使用。
+
+**并行GC**
+
+java -XX:+UseParallelGC -Xms512m -Xmx512m -Xloggc:gc.demo.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps GCLogAnalysis
+
+![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603894260565-d9a5357a-8eb0-4786-908a-8b8f4f7d60e3.png?x-oss-process=image%2Fresize%2Cw_1764)
+
+**CMS GC**
+
+java -XX:+UseConcMarkSweepGC-Xms512m -Xmx512m -Xloggc:gc.demo.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps GCLogAnalysis
+
+![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603894280707-69fcab4d-643c-49bd-8762-15179554d747.png?x-oss-process=image%2Fresize%2Cw_1764)
+
+**G1 GC**
+
+java -XX:+UseG1GC -Xms512m -Xmx512m -Xloggc:gc.demo.log -XX:+PrintGCDateStamps GCLogAnalysis
+
+![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603894300907-e8bebbb5-7557-4dfb-9548-ab88c1785089.png?x-oss-process=image%2Fresize%2Cw_1764)
 
 
 
@@ -98,32 +128,6 @@ sb -u http://localhost:8088/api/hello -c 20 -N 60
 
 根据上述自己对于 1 和 2 的演示，写一段对于不同 GC 的总结，提交到 Github。
 
-**串行GC**
-
-java -Xloggc:gc.demo.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps GCLogAnalysis
-
-![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603894228067-96dfe231-3907-4327-bfb5-694c7aaf10a0.png?x-oss-process=image%2Fresize%2Cw_1764)
-
-性能很差，避免使用。
-
-**并行GC**
-
-java -XX:+UseParallelGC -Xms512m -Xmx512m -Xloggc:gc.demo.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps GCLogAnalysis
-
-![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603894260565-d9a5357a-8eb0-4786-908a-8b8f4f7d60e3.png?x-oss-process=image%2Fresize%2Cw_1764)
-
-**CMS GC**
-
-java -XX:+UseConcMarkSweepGC-Xms512m -Xmx512m -Xloggc:gc.demo.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps GCLogAnalysis
-
-![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603894280707-69fcab4d-643c-49bd-8762-15179554d747.png?x-oss-process=image%2Fresize%2Cw_1764)
-
-**G1 GC**
-
-java -XX:+UseG1GC -Xms512m -Xmx512m -Xloggc:gc.demo.log -XX:+PrintGCDateStamps GCLogAnalysis
-
-![image.png](https://cdn.nlark.com/yuque/0/2020/png/733521/1603894300907-e8bebbb5-7557-4dfb-9548-ab88c1785089.png?x-oss-process=image%2Fresize%2Cw_1764)
-
 
 
 压测结论：
@@ -144,13 +148,13 @@ G1>CMS>并行≈串行
 
 对比：
 
-Serial collector适合单核CPU与小堆，收集时会暂停所有工作线程
+Serial collector适合单核CPU与小堆，收集时会暂停所有工作线程。
 
-Parallel collector适合多核CPU，收集时会暂停所有工作线程
+Parallel collector适合多核CPU，收集时会暂停所有工作线程。
 
-CMS相较于Parallel，需要更多的CPU资源，最短停顿时间，堆小于4G建议使用
+CMS相较于Parallel，需要更多的CPU资源，最短停顿时间，堆小于4G建议使用。
 
-G1适合大堆（>4GB），最短停顿时间
+G1适合大堆（>4GB），最短停顿时间。
 
 
 
