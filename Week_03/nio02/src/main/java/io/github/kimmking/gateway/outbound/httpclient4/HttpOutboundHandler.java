@@ -21,7 +21,6 @@ import org.apache.http.impl.nio.reactor.IOReactorConfig;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
-import java.io.IOException;
 import java.util.concurrent.*;
 
 import static io.netty.handler.codec.http.HttpResponseStatus.NO_CONTENT;
@@ -61,48 +60,11 @@ public class HttpOutboundHandler {
     
     public void handle(final FullHttpRequest fullRequest, final ChannelHandlerContext ctx) {
         final String url = this.backendUrl + fullRequest.uri();
-        // 自己写的http请求
-        proxyService.submit(() -> {douhuGet(fullRequest, ctx, url);});
-    }
-
-    private void douhuGet(final FullHttpRequest fullRequest, final ChannelHandlerContext ctx, final String url) {
-        CloseableHttpResponse Response = null;
-        FullHttpResponse response = null;
-        try {
-            CloseableHttpClient client = HttpClients.createDefault();
-            HttpGet httpGet = new HttpGet(url);
-
-            Response = client.execute(httpGet);
-            // HttpEntity
-            // 是一个中间的桥梁，在httpClient里面，是连接我们的请求与响应的一个中间桥梁，所有的请求参数都是通过HttpEntity携带过去的
-            // 所有的响应的数据，也全部都是封装在HttpEntity里面
-            HttpEntity entity = Response.getEntity();
-            // 通过EntityUtils 来将我们的数据转换成字符串
-            String str = EntityUtils.toString(entity, "UTF-8");
-
-            response = new DefaultFullHttpResponse(HTTP_1_1, OK, Unpooled.wrappedBuffer(str.getBytes()));
-            response.headers().set("Content-Type", "application/json");
-            response.headers().setInt("Content-Length", Integer.parseInt(Response.getFirstHeader("Content-Length").getValue()));
-            Response.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (fullRequest != null) {
-                if (!HttpUtil.isKeepAlive(fullRequest)) {
-                    ctx.write(response).addListener(ChannelFutureListener.CLOSE);
-                } else {
-                    //response.headers().set(CONNECTION, KEEP_ALIVE);
-                    ctx.write(response);
-                }
-            }
-            ctx.flush();
-            //ctx.close();
-        }
+        proxyService.submit(()->defaultGet(fullRequest, ctx, url));
     }
     
     private void fetchGet(final FullHttpRequest inbound, final ChannelHandlerContext ctx, final String url) {
         final HttpGet httpGet = new HttpGet(url);
-        //httpGet.setHeader(HTTP.CONN_DIRECTIVE, HTTP.CONN_CLOSE);
         httpGet.setHeader(HTTP.CONN_DIRECTIVE, HTTP.CONN_KEEP_ALIVE);
         httpclient.execute(httpGet, new FutureCallback<HttpResponse>() {
             @Override
@@ -115,42 +77,52 @@ public class HttpOutboundHandler {
                     
                 }
             }
-            
             @Override
             public void failed(final Exception ex) {
                 httpGet.abort();
                 ex.printStackTrace();
             }
-            
             @Override
             public void cancelled() {
                 httpGet.abort();
             }
         });
     }
-    
+
+    private void defaultGet(final FullHttpRequest fullRequest, final ChannelHandlerContext ctx, final String url) {
+        CloseableHttpResponse closeableHttpResponse;
+        FullHttpResponse response = null;
+        try {
+            CloseableHttpClient client = HttpClients.createDefault();
+            HttpGet httpGet = new HttpGet(url);
+            closeableHttpResponse = client.execute(httpGet);
+            HttpEntity entity = closeableHttpResponse.getEntity();
+            String str = EntityUtils.toString(entity, "UTF-8");
+            response = new DefaultFullHttpResponse(HTTP_1_1, OK, Unpooled.wrappedBuffer(str.getBytes()));
+            response.headers().set("Content-Type", "application/json");
+            response.headers().setInt("Content-Length", Integer.parseInt(closeableHttpResponse.getFirstHeader("Content-Length").getValue()));
+            closeableHttpResponse.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (fullRequest != null) {
+                if (!HttpUtil.isKeepAlive(fullRequest)) {
+                    ctx.write(response).addListener(ChannelFutureListener.CLOSE);
+                } else {
+                    ctx.write(response);
+                }
+            }
+            ctx.flush();
+        }
+    }
+
     private void handleResponse(final FullHttpRequest fullRequest, final ChannelHandlerContext ctx, final HttpResponse endpointResponse) throws Exception {
         FullHttpResponse response = null;
         try {
-//            String value = "hello,kimmking";
-//            response = new DefaultFullHttpResponse(HTTP_1_1, OK, Unpooled.wrappedBuffer(value.getBytes("UTF-8")));
-//            response.headers().set("Content-Type", "application/json");
-//            response.headers().setInt("Content-Length", response.content().readableBytes());
-    
-    
             byte[] body = EntityUtils.toByteArray(endpointResponse.getEntity());
-//            System.out.println(new String(body));
-//            System.out.println(body.length);
-    
             response = new DefaultFullHttpResponse(HTTP_1_1, OK, Unpooled.wrappedBuffer(body));
             response.headers().set("Content-Type", "application/json");
             response.headers().setInt("Content-Length", Integer.parseInt(endpointResponse.getFirstHeader("Content-Length").getValue()));
-    
-//            for (Header e : endpointResponse.getAllHeaders()) {
-//                //response.headers().set(e.getName(),e.getValue());
-//                System.out.println(e.getName() + " => " + e.getValue());
-//            } 
-        
         } catch (Exception e) {
             e.printStackTrace();
             response = new DefaultFullHttpResponse(HTTP_1_1, NO_CONTENT);
@@ -160,12 +132,10 @@ public class HttpOutboundHandler {
                 if (!HttpUtil.isKeepAlive(fullRequest)) {
                     ctx.write(response).addListener(ChannelFutureListener.CLOSE);
                 } else {
-                    //response.headers().set(CONNECTION, KEEP_ALIVE);
                     ctx.write(response);
                 }
             }
             ctx.flush();
-            //ctx.close();
         }
         
     }
@@ -174,6 +144,4 @@ public class HttpOutboundHandler {
         cause.printStackTrace();
         ctx.close();
     }
-    
-    
 }

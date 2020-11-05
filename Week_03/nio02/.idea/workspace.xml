@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eae73e0b-2100-41bf-bc39-3dffd68ad925" name="默认的" comment="" />
+    <list default="true" id="922a8ff6-ad13-446b-825a-fd2e7eb4989e" name="默认的" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -23,7 +23,7 @@
       </MavenImportingSettings>
     </option>
   </component>
-  <component name="ProjectId" id="1jrpnn8GIR8CrCJuv1wcbGAj2fp" />
+  <component name="ProjectId" id="1jrpIVGnOpr6mJrwuUky1rYVJux" />
   <component name="ProjectViewState">
     <option name="abbreviatePackageNames" value="true" />
     <option name="autoscrollToSource" value="true" />
@@ -40,14 +40,22 @@
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="MavenSettings" />
   </component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="io.github.kimmking.gateway.filter" />
+      <recent name="io.github.kimmking.gateway.filter.impl" />
+    </key>
+  </component>
   <component name="RunManager">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="class" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -56,16 +64,22 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="eae73e0b-2100-41bf-bc39-3dffd68ad925" name="默认的" comment="" />
-      <created>1604572234431</created>
+      <changelist id="922a8ff6-ad13-446b-825a-fd2e7eb4989e" name="默认的" comment="" />
+      <created>1604571985318</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1604572234431</updated>
-      <workItem from="1604572235786" duration="1303000" />
+      <updated>1604571985318</updated>
+      <workItem from="1604571987631" duration="1749000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="617" y="213" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1604573441614">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="617" y="213" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824@0.0.1536.824" timestamp="1604573441614" />
   </component>
 </project>
