@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context">
+
+    <bean id="xmlConfig" class="com.geekbang.homework2.XmlConfig">
+    </bean>
+
+    <bean id="student1" class="com.geekbang.homework4.Student">
+        <property name="id" value="1"/>
+        <property name="name" value="1"/>
+    </bean>
+
+    <bean id="student2" class="com.geekbang.homework4.Student">
+        <property name="id" value="1"/>
+        <property name="name" value="1"/>
+    </bean>
+
+    <bean id="class1" class="com.geekbang.homework4.Klass">
+        <property name="students">
+            <list>
+                <ref bean="student1"/>
+                <ref bean="student2"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="school1" class="com.geekbang.homework4.School">
+        <property name="class1" ref="class1"/>
+        <property name="student100" ref="student1"/>
+    </bean>
+
+</beans>
