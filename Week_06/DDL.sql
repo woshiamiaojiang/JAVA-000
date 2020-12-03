@@ -4,7 +4,7 @@ CREATE TABLE user_info(
   user_name VARCHAR(20) NOT NULL COMMENT '用户昵称',
   mobile_phone INT UNSIGNED COMMENT '手机号',
   user_email VARCHAR(50) COMMENT '邮箱',
-  gender CHAR(1) COMMENT '性别',
+  gender TINYINT COMMENT '性别',
   register_time TIMESTAMP NOT NULL COMMENT '注册时间',
   modified_user BIGINT(20)    COMMENT '最后修改人' ,
   modified_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
