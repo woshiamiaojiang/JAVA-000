@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.database.masterslave.autocreate.mapper.T1Mapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.database.masterslave.autocreate.entity.T1">
+        <result column="id" property="id" />
+    </resultMap>
+
+    <select id="getList"   resultType="java.lang.Integer">
+        SELECT * FROM t1
+    </select>
+
+    <insert id="add">
+        insert into t1(id) values(#{id,jdbcType=INTEGER})
+    </insert>
+
+</mapper>
