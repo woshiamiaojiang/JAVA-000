@@ -1,0 +1,16 @@
+authentication:
+  users:
+    root:
+      password: root
+props:
+  max-connections-size-per-query: 1  #每个查询可以打开的最大连接数量,默认为1
+  acceptor-size: 16            # 用于设置接收客户端请求的工作线程个数，默认为CPU核数*2
+  executor-size: 16            # 工作线程数量，默认值: CPU核数
+  proxy-frontend-flush-threshold: 128   # 对于单个大查询,每多少个网络包返回一次 128
+  proxy-transaction-type: LOCAL    #默认为LOCAL事务，允许LOCAL，XA，BASE三个值，XA采用Atomikos作为事务管理器，BASE类型需要拷贝实现ShardingTransactionManager的接口的jar包至lib目录中
+  proxy-opentracing-enabled: false   #是否开启链路追踪功能，默认为不开启
+  proxy-hint-enabled: false     #是否启用hint算法强制路由 默认false
+  query-with-cipher-column: true   #是否使用密文列查询 默认false
+  sql-show: true                   #是否打印sql 默认false
+  check-table-metadata-enabled: false #允许范围查询，默认为 false ,要是我们分库分表是水平切分，可以想得到范围查询会像广播去查每一个表，比较耗性能能
+

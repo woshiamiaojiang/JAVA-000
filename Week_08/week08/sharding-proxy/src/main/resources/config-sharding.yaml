@@ -1,0 +1,52 @@
+#数据源别名，保证唯一且最好与分片列保持规律性
+schemaName: sharding-ds
+dataSources:
+  ds_0:
+    url: jdbc:mysql://localhost:3306/db?serverTimezone=UTC&useSSL=false
+    username: root
+    password: root
+    connectionTimeoutMilliseconds: 40000
+    idleTimeoutMilliseconds: 50000
+    maxLifetimeMilliseconds: 2000000
+    maxPoolSize: 20
+  ds_1:
+    url: jdbc:mysql://localhost:3307/db?serverTimezone=UTC&useSSL=false
+    username: root
+    password: root
+    connectionTimeoutMilliseconds: 40000
+    idleTimeoutMilliseconds: 50000
+    maxLifetimeMilliseconds: 2000000
+    maxPoolSize: 20
+#  分片规则
+rules:
+  - !SHARDING
+    tables:
+      order:
+        actualDataNodes: ds_${0..1}.order_${0..15}  #规则节点，逻辑数据源+逻辑表名   支持inline表达式。（缺省表示自动匹配全部逻辑库和逻辑表组合，每个库需要一个逻辑表，若没有自动创建一个，适用于只分库不分表且分库的逻辑表结构完全一致的情况）
+        tableStrategy:
+          standard:
+            shardingColumn: order_id
+            shardingAlgorithmName: order_inline
+        keyGenerateStrategy:
+          column: order_id
+          keyGeneratorName: snowflake
+    defaultDatabaseStrategy:
+      standard:
+        shardingColumn: user_id
+        shardingAlgorithmName: database_inline
+    defaultTableStrategy:
+      none:
+    shardingAlgorithms:
+      database_inline:
+        type: INLINE
+        props:
+          algorithm-expression: ds_${user_id % 2}
+      order_inline:
+        type: INLINE
+        props:
+          algorithm-expression: order_${order_id % 16}
+    keyGenerators:
+      snowflake:
+        type: SNOWFLAKE
+        props:
+          worker-id: 123
