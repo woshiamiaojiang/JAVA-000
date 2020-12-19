@@ -1,0 +1,24 @@
+server:
+  port: 8089
+spring:
+  application:
+    name: dubbo-demo-consumer
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/consumer?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=UTC
+    username: root
+    password:
+dubbo:
+  scan:
+    base-packages: io.kimmking.dubbo.demo.consumer
+  protocol:
+    name: dubbo
+    port: 12346
+  registry:
+    address: zookeeper://localhost:2181
+  metadata-report:
+    address: zookeeper://localhost:2181
+
+mybatis:
+  type-aliases-package: io.kimmking.dubbo.demo.consumer.mapper
+  mapperLocations: classpath:mapper/*Mapper.xml

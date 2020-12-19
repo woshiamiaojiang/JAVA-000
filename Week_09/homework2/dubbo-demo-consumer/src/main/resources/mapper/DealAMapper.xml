@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="io.kimmking.dubbo.demo.consumer.mapper.DealAMapper">
+
+    <update id="updateAccount">
+      update t_deal_a set lokk = lokk + 1 where id = #{id}
+    </update>
+
+    <update id="updateConfirm">
+      update t_deal_a set dollar = dollar - 1, rmb = rmb + 7, lokk = lokk - 1 where id = #{id}
+    </update>
+
+    <update id="updateCancel">
+      update t_deal_a set lokk = lokk - 1 where id = #{id}
+    </update>
+</mapper>
